@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Emotion History</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">  
+
+    </head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+    <h2 class="logo">
+    <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="EmoCare Logo">
+    EmoCare
+</h2>
+
+    <ul>
+        <li onclick="window.location.href='/dashboard'">🏠 Dashboard</li>
+        <li class="active">📊 Emotion History</li>
+        <li onclick="window.location.href='/chat'">🤖 Chat Companion</li>
+        <li onclick="window.location.href='/reports'">📈 Reports</li>
+        <li onclick="window.location.href='/profile'">👤 Profile</li>
+        <li onclick="window.location.href='/settings'">⚙️ Settings</li>
+        <li onclick="window.location.href='/logout'">🚪 Logout</li>
+    </ul>
+
+</div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <h1>📊 Emotion History</h1>
+
+        <div class="history-container">
+
+    {% if emotions %}
+
+        {% for e in emotions %}
+
+        <div class="emotion-card">
+
+            <div class="emotion-top">
+
+                <span class="emotion-tag {{ e.emotion|lower }}">
+                    {{ e.emotion }}
+                </span>
+
+                <span class="date">
+                    {{ e.created_at }}
+                </span>
+
+            </div>
+
+            <p>{{ e.message }}</p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-history">
+
+            <div class="empty-icon">🤖</div>
+<h2>No Emotion History Yet</h2>
+<p>Your emotional journey will appear here after chatting with EmoCare.</p>
+
+<button onclick="window.location.href='/chat'">
+    💬 Talk to EmoCare
+</button>
+        </div>
+
+    {% endif %}
+
+</div>
+
+    </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

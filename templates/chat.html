@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EmoCare - Chat Companion</title>
+
+    <link rel="icon"
+          href="{{ url_for('static', filename='images/logo.jpeg') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <h2 class="logo">
+            <img src="{{ url_for('static', filename='images/logo.jpeg') }}">
+            EmoCare
+        </h2>
+
+        <ul>
+
+            <li onclick="window.location.href='/dashboard'">🏠 Dashboard</li>
+            <li onclick="window.location.href='/history'">📊 Emotion History</li>
+            <li class="active">🤖 Chat Companion</li>
+            <li onclick="window.location.href='/reports'">📈 Reports</li>
+            <li onclick="window.location.href='/profile'">👤 Profile</li>
+            <li onclick="window.location.href='/settings'">⚙️ Settings</li>
+            <li onclick="window.location.href='/logout'">🚪 Logout</li>
+
+        </ul>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+
+            <div class="chat-top">
+
+    <div class="left-top">
+
+        <h3>🤖 Chat Companion</h3>
+
+        <div class="chat-actions">
+
+            <button id="newChatBtn" class="chat-btn">
+                ➕ New Chat
+            </button>
+
+            <div class="history-dropdown">
+
+                <button id="historyBtn" class="chat-btn">
+                    📜 Chat History ▼
+                </button>
+
+                <div id="historyMenu" class="history-menu">
+
+                    {% if sessions %}
+
+                        {% for s in sessions %}
+
+                        <a href="/chat/{{ s.id }}" class="history-item">
+                            {{ s.title }}
+                        </a>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p>No Previous Chats</p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+        </div>
+
+        <!-- CHAT BOX -->
+        <div class="chat-container">
+
+            <div id="chatMessages" class="chat-messages">
+                
+                <!-- ALWAYS SHOW GREETING -->
+                 
+                <div class="bot-message">
+                    Hello 👋 I am your EmoCare Companion.
+                    How are you feeling today?
+                </div>
+                
+                <!-- PREVIOUS MESSAGES -->
+                 {% for chat in chats %}
+
+                 <div class="user-message">
+                    {{ chat.user_message }}
+                </div>
+                
+                <div class="bot-message">
+                    {{ chat.bot_response }}
+                </div>
+                
+                {% endfor %}
+            
+            </div>
+            
+            <!-- INPUT -->
+            <div class="chat-input">
+
+                <input type="text"
+                       id="userMessage"
+                       placeholder="Type your message...">
+
+                <button onclick="sendMessage()">
+                    Send
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<div id="toast" class="toast"></div>
+
+</body>
+</html>

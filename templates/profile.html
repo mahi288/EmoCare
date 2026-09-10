@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EmoCare | Profile</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+
+
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h2 class="logo">
+    <img src="{{ url_for('static', filename='images/logo.jpeg') }}"
+         alt="EmoCare Logo">
+
+    EmoCare
+</h2>
+
+
+        <ul>
+
+            <li onclick="window.location.href='/dashboard'">🏠 Dashboard</li>
+
+            <li onclick="window.location.href='/history'">
+                📊 Emotion History
+            </li>
+
+            <li onclick="window.location.href='/chat'">
+                🤖 Chat Companion
+            </li>
+
+            <li onclick="window.location.href='/reports'">
+                📈 Reports
+            </li>
+
+            <li class="active">
+                👤 Profile
+            </li>
+
+
+            <li onclick="window.location.href='/settings'">
+                ⚙️ Settings
+            </li>
+
+            <li onclick="window.location.href='/logout'">
+                🚪 Logout
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="main-content">
+
+        <!-- Top Bar -->
+
+        <div class="topbar">
+
+            <h2>My Profile</h2>
+
+            <a href="/profile" class="profile-avatar">
+                {% if user.profile_photo %}
+                
+                <img src="{{ url_for('static',
+                filename='uploads/profiles/' + user.profile_photo) }}">
+                
+                {% else %}
+                
+                <div class="initial-avatar">
+                    
+                    {{ user.initials }}
+                
+                </div>
+                
+                {% endif %}
+            
+            </a>
+        
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+        
+        {% if messages %}
+        
+        <div class="success-message">
+            {{ messages[0] }}
+        </div>
+        
+        {% endif %}
+        
+        {% endwith %}
+
+        <!-- Profile Card -->
+
+        <div class="profile-card">
+
+    <!-- Profile Picture -->
+    {% if user.profile_photo %}
+    
+    <img class="avatar"
+    src="{{ url_for('static', filename='uploads/profiles/' + user.profile_photo) }}">
+    
+    {% else %}
+    
+    <div class="avatar initial-avatar-large">
+        {{ user.initials }}
+    </div>
+    
+    {% endif %}
+
+    <!-- Upload Picture Form -->
+    <form
+    id="profileUploadForm"
+    action="/profile"
+    method="POST"
+    enctype="multipart/form-data">
+
+    <!-- Hidden File Input -->
+    <input
+    type="file"
+    id="profilePictureInput"
+    name="photo"
+    accept=".jpg,.jpeg,.png"
+    style="display:none;"
+    onchange="document.getElementById('profileUploadForm').submit();">
+
+    <!-- Change Picture Button -->
+    <button
+        type="button"
+        class="upload-btn"
+        onclick="document.getElementById('profilePictureInput').click();">
+
+        📷 Edit Photo
+
+    </button>
+
+</form>
+
+<form action="/remove_profile_photo" method="POST">
+    <button type="submit" class="remove-btn">
+        🗑 Remove Photo
+    </button>
+</form>
+
+    <h2>{{ user.name }}</h2>
+
+    <p>📧 {{ user.email }}</p>
+
+    <p>👤 {{ user.gender }}</p>
+
+    <button
+        class="edit-profile-btn"
+        onclick="openProfileModal()">
+
+        ✏ Edit Profile
+
+    </button>
+
+</div>
+
+<!-- ===========================
+     EDIT PROFILE MODAL
+=========================== -->
+
+<div id="profileModal" class="modal">
+
+    <div class="modal-content">
+
+        <span
+        class="close-btn"
+        onclick="closeProfileModal()">
+
+        &times;
+
+        </span>
+
+        <h2>Edit Profile</h2>
+
+        <form
+        action="/update_profile"
+        method="POST">
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                name="name"
+                value="{{ user.name }}"
+                required>
+
+            <label>Gender</label>
+
+            <select
+                name="gender">
+
+                <option
+                {% if user.gender=="Male" %}selected{% endif %}>
+                Male
+                </option>
+
+                <option
+                {% if user.gender=="Female" %}selected{% endif %}>
+                Female
+                </option>
+
+                <option
+                {% if user.gender=="Prefer not to say" %}selected{% endif %}>
+                Prefer not to say
+                </option>
+
+            </select>
+
+            <label>New Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Leave blank to keep current password">
+
+            <button
+            type="submit"
+            class="save-btn">
+
+                Save Changes
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ===========================
+     MEDICAL PROFILE
+=========================== -->
+
+<div class="glass-card medical-profile-card">
+
+    <h3>🏥 Medical Profile</h3>
+
+    <p class="medical-info-text">
+        This information helps EmoCare provide more personalized
+        emotional and wellness support.
+    </p>
+
+    <form action="/save_medical_profile" method="POST">
+
+        <div class="medical-form-grid">
+
+            <div>
+                <label>Cancer Type</label>
+
+                <input
+                    type="text"
+                    name="cancer_type"
+                    placeholder="e.g. Breast Cancer"
+                    value="{{ medical_profile.cancer_type if medical_profile else '' }}"
+                    required>
+            </div>
+
+            <div>
+                <label>Cancer Stage</label>
+
+                <select name="cancer_stage" required>
+
+                    <option value="">Select Stage</option>
+
+                    <option value="Stage I"
+                        {% if medical_profile and medical_profile.cancer_stage == "Stage I" %}selected{% endif %}>
+                        Stage I
+                    </option>
+
+                    <option value="Stage II"
+                        {% if medical_profile and medical_profile.cancer_stage == "Stage II" %}selected{% endif %}>
+                        Stage II
+                    </option>
+
+                    <option value="Stage III"
+                        {% if medical_profile and medical_profile.cancer_stage == "Stage III" %}selected{% endif %}>
+                        Stage III
+                    </option>
+
+                    <option value="Stage IV"
+                        {% if medical_profile and medical_profile.cancer_stage == "Stage IV" %}selected{% endif %}>
+                        Stage IV
+                    </option>
+
+                </select>
+            </div>
+
+            <div>
+                <label>Current Treatment</label>
+
+                <input
+                    type="text"
+                    name="current_treatment"
+                    placeholder="e.g. Chemotherapy"
+                    value="{{ medical_profile.current_treatment if medical_profile else '' }}"
+                    required>
+            </div>
+
+            <div>
+                <label>Treatment Start Date</label>
+
+                <input
+                    type="date"
+                    name="treatment_start_date"
+                    value="{{ medical_profile.treatment_start_date.strftime('%Y-%m-%d') if medical_profile and medical_profile.treatment_start_date else '' }}">
+            </div>
+
+        </div>
+
+        <label>Additional Medical Notes</label>
+
+        <textarea
+            name="medical_notes"
+            rows="4"
+            placeholder="Enter any additional information you want EmoCare to consider...">{{ medical_profile.medical_notes if medical_profile else '' }}</textarea>
+
+        <button type="submit" class="upload-btn">
+            💾 Save Medical Profile
+        </button>
+
+    </form>
+
+</div>
+
+        <!-- Summary -->
+
+        <div class="summary-row">
+
+            <div class="summary-box">
+
+                <h3>😊 Top Emotion</h3>
+
+                <h2>
+
+                    {% if top_emotion %}
+
+                        {{ top_emotion.emotion }}
+
+                    {% else %}
+
+                        --
+
+                    {% endif %}
+
+                </h2>
+
+            </div>
+
+            <div class="summary-box">
+
+                <h3>📈 Mood Logs</h3>
+
+                <h2>{{ total_logs.total }}</h2>
+
+            </div>
+
+        </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Verify OTP | EmoCare</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/login.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Left Side -->
+
+    <div class="left">
+
+        <div class="brand">
+
+            <img src="{{ url_for('static', filename='images/logo.jpeg') }}"
+                 class="login-logo">
+
+            <h2>EmoCare</h2>
+
+        </div>
+
+        <h1>Email Verification</h1>
+
+        <p>
+            We've sent a <strong>6-digit OTP</strong> to your registered email.
+            Enter it below to continue.
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="error-message">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="/verify_otp" method="POST">
+
+            <div class="input-group">
+
+                <label>One-Time Password</label>
+
+                <input
+                    type="text"
+                    name="otp"
+                    placeholder="Enter 6-digit OTP"
+                    maxlength="6"
+                    autocomplete="one-time-code"
+                    required>
+
+            </div>
+
+            <button type="submit">
+                Verify OTP
+            </button>
+
+        </form>
+
+    </div>
+
+    <div style="text-align:center;margin-top:20px;">
+        
+        {% if remaining > 0 %}
+        
+        <p id="timer">
+            Resend OTP in
+            <span id="countdown">{{ remaining }}</span>s
+        </p>
+
+        <a id="resendLink" href="/resend_otp" style="display:none;">
+            Resend OTP
+        </a>
+        
+        {% else %}
+        
+        <a id="resendLink" href="/resend_otp">
+            Resend OTP
+        </a>
+        
+        {% endif %}
+    
+    </div>
+
+    <!-- Right Side -->
+
+    <div class="right">
+
+        <img src="{{ url_for('static', filename='images/robot.png') }}"
+             class="robot">
+
+    </div>
+
+</div>
+
+<script>
+
+let seconds = {{ remaining|default(0) }};
+
+const countdown = document.getElementById("countdown");
+const timer = document.getElementById("timer");
+const resend = document.getElementById("resendLink");
+
+if (seconds > 0 && countdown && timer && resend) {
+
+    const interval = setInterval(function () {
+
+        seconds--;
+
+        countdown.innerText = seconds;
+
+        if (seconds <= 0) {
+
+            clearInterval(interval);
+
+            timer.style.display = "none";
+
+            resend.style.display = "inline-block";
+
+        }
+
+    }, 1000);
+
+}
+
+</script>
+</body>
+
+</html>

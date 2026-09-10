@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <title>EmoCare - Dashboard</title>
+
+    <link rel="icon" type="image/jpeg"
+          href="{{ url_for('static', filename='images/logo.jpeg') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2 class="logo">
+            <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="EmoCare Logo">
+            EmoCare
+        </h2>
+
+        <ul>
+            <li class="active">🏠 Dashboard</li>
+            <li onclick="window.location.href='/history'">📊 Emotion History</li>
+            <li onclick="window.location.href='/chat'">🤖 Chat Companion</li>
+            <li onclick="window.location.href='/reports'">📈 Reports</li>
+            <li onclick="window.location.href='/profile'">👤 Profile</li>
+            <li onclick="window.location.href='/settings'">⚙️ Settings</li>
+            <li onclick="window.location.href='/logout'">🚪 Logout</li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+
+            <h3 id="welcomeUser">Welcome Back {{ user.name}} 👋</h3>
+
+            <div class="top-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Search emotions, reports...">
+                    <button class="mic">🎤</button>
+                </div>
+
+                <div class="notification-container">
+
+    <button id="notificationBtn">
+        🔔
+        {% if unread > 0 %}
+            <span class="badge">{{ unread }}</span>
+        {% endif %}
+    </button>
+
+    <div id="notificationDropdown" class="notification-dropdown">
+
+        <div class="notification-header">
+            <h4>Notifications</h4>
+        </div>
+
+        {% if notifications %}
+
+            {% for n in notifications %}
+                <div class="notification-item">
+                    <strong>{{ n.title }}</strong>
+                    <p>{{ n.message }}</p>
+                </div>
+            {% endfor %}
+
+        {% else %}
+
+            <p style="padding:15px;">No Notifications</p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+                <a href="/profile" class="profile-avatar">
+                    
+                    {% if user.profile_photo %}
+                    
+                    <img src="{{ url_for('static', filename='uploads/profiles/' + user.profile_photo) }}">
+                    
+                    {% else %}
+                    
+                    <div class="initial-avatar">
+                        
+                        {{ user.initials }}
+                    
+                    </div>
+                    
+                    {% endif %}
+                
+                </a>
+            
+            </div>
+        
+        </div>
+
+        <!-- CARDS -->
+        <div class="cards">
+
+            <div class="mood-selector">
+                <h4>Select Your Mood</h4>
+
+                <div class="mood-container">
+                    <button class="moodBtn" onclick="setMood('happy')">😊 Happy</button>
+                    <button class="moodBtn" onclick="setMood('calm')">😌 Calm</button>
+                    <button class="moodBtn" onclick="setMood('sad')">😢 Sad</button>
+                    <button class="moodBtn" onclick="setMood('angry')">😡 Angry</button>
+                    <button class="moodBtn" onclick="setMood('stressed')">😰 Stressed</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>Current Mood</h4>
+                <p class="highlight" id="currentMood"> {{ current_mood }}</p>
+            </div>
+
+            <div class="card">
+                <h4>Weekly Average</h4>
+                <p class="highlight"> {{ weekly_average }}</p>
+            </div>
+
+            <div class="card motivation-card">
+                <h4>Motivation</h4>
+                <p id="moodQuote">Select a mood to see a quote</p>
+            </div>
+
+            <div class="card">
+                <h4>Sessions Today</h4>
+                <p>{{ today_sessions }}</p>
+            </div>
+
+            <div class="card tip-card">
+                <h4>Daily Wellness Tip</h4>
+                <p id="wellnessTip">Click below to get a wellness tip</p>
+                <button onclick="newTip()">✨ Get Tip</button>
+            </div>
+
+        </div>
+
+        <!-- CONTENT GRID -->
+        <div class="content-grid">
+
+            <!-- LEFT -->
+            <div class="left-section">
+                <div class="graph">
+                    <h4>Mood Overview</h4>
+                    <canvas id="moodChart"></canvas>
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="right-section">
+
+                <!-- Doctor Appointment -->
+                <div class="appointment">
+                    <h4>Doctor Appointment</h4>
+                    <p><strong>Dr. Smith</strong></p>
+                    <p>2:00 PM - 25 April 2024</p>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity">
+                    <h4>Recent Activity</h4>
+                    <ul>
+                        <li>✔ Chat session completed - Happy mood detected</li>
+                        <li>✔ Weekly report generated</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    const emotionCounts = {{ emotion_counts | tojson }};
+    console.log("Emotion Counts:", emotionCounts);
+</script>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<div class="chatbot-btn" onclick="window.location.href='/chat'">💬</div>
+
+<div id="toast" class="toast"></div>
+
+</body>
+</html>

@@ -1,0 +1,473 @@
+/* ===========================
+   PROFILE PAGE
+=========================== */
+
+.main-content{
+    flex:1;
+    padding:30px;
+    background:var(--bg);
+    overflow-y:auto;
+}
+
+/* ===========================
+   TOPBAR
+=========================== */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.topbar h2{
+    color:var(--text);
+    font-size:30px;
+    font-weight:600;
+}
+
+/* ===========================
+   PROFILE AVATAR
+=========================== */
+
+.profile-avatar{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    overflow:hidden;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.profile-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile-avatar:hover{
+    transform:scale(1.08);
+}
+
+/* ===========================
+   PROFILE CARD
+=========================== */
+
+.profile-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    box-shadow:var(--shadow);
+    margin-bottom:25px;
+}
+
+.avatar{
+    width:140px;
+    height:140px;
+    border-radius:50%;
+    border:5px solid var(--border);
+    object-fit:cover;
+    margin-bottom:20px;
+    transition: .3s;
+}
+
+.avatar:hover{
+    transform: scale(1.05);
+}
+
+.profile-card h2{
+    color:var(--text);
+    margin-bottom:10px;
+}
+
+.profile-card p{
+    color:var(--text-light);
+    margin:8px 0;
+}
+
+/* ===========================
+   GLASS CARD
+=========================== */
+
+.glass-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
+
+.glass-card h3{
+    color:var(--text);
+    margin-bottom:20px;
+}
+
+/* ===========================
+   FILE INPUT
+=========================== */
+
+input[type=file]{
+    width:100%;
+    margin:20px 0;
+    padding:12px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:10px;
+}
+
+/* ===========================
+   UPLOAD BUTTON
+=========================== */
+
+.upload-btn{
+    margin-top:15px;
+    background:#7c3aed;
+    color:white;
+    border:none;
+    border-radius:25px;
+    padding:12px 24px;
+    cursor:pointer;
+    font-size:15px;
+    transition:.3s;
+}
+
+.upload-btn:hover{
+    background:#6d28d9;
+    transform:translateY(-2px);
+}
+
+/* ===========================
+   REPORT ITEM
+=========================== */
+
+.report-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px;
+    border-radius:15px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    margin-bottom:15px;
+}
+
+.report-item small{
+    color:var(--text-light);
+}
+
+/* ===========================
+   VIEW BUTTON
+=========================== */
+
+.view-btn{
+    text-decoration:none;
+    background:#22c55e;
+    color:white;
+    padding:8px 18px;
+    border-radius:20px;
+    margin-right:10px;
+}
+
+/* ===========================
+   DELETE BUTTON
+=========================== */
+
+.delete-btn{
+    text-decoration:none;
+    background:#ef4444;
+    color:white;
+    padding:8px 18px;
+    border-radius:20px;
+}
+
+/* ===========================
+   SUMMARY
+=========================== */
+
+.summary-row{
+    display:flex;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.summary-box{
+    flex:1;
+     background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(20px);
+    border-radius:20px;
+    text-align:center;
+    padding:30px;
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
+
+.summary-box h3{
+    color:var(--text-light);
+    margin-bottom:15px;
+}
+
+.summary-box h2{
+    color:var(--primary);
+    font-size:34px;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:900px){
+
+.summary-row{
+    flex-direction:column;
+}
+
+.report-item{
+    flex-direction:column;
+    gap:15px;
+    text-align:center;
+}
+}
+
+/* ===========================
+   EDIT PROFILE BUTTON
+=========================== */
+
+.edit-profile-btn{
+    margin-top:20px;
+    background:#7c3aed;
+    color:white;
+    border:none;
+    padding:12px 25px;
+    border-radius:25px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.edit-profile-btn:hover{
+    background:#6d28d9;
+}
+
+/* ===========================
+   MODAL
+=========================== */
+
+.modal{
+    display:none;
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.5);
+    z-index:999;
+}
+
+.modal-content{
+    background:var(--card);
+    color:var(--text);
+    width:420px;
+    max-width:90%;
+    margin:8% auto;
+    padding:30px;
+    border-radius:20px;
+    position:relative;
+}
+
+.modal-content h2{
+    margin-bottom:25px;
+    color:#7c3aed;
+}
+
+.modal-content label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:8px;
+}
+
+.modal-content input,
+.modal-content select{
+    width:100%;
+    padding:12px;
+    background:var(--bg);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:10px;
+}
+
+.save-btn{
+    margin-top:25px;
+    width:100%;
+    padding:12px;
+    background:#7c3aed;
+    color:white;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+.close-btn{
+    position:absolute;
+    top:15px;
+    right:20px;
+    font-size:28px;
+    cursor:pointer;
+}
+
+.upload-btn,
+.edit-profile-btn,
+.save-btn,
+.view-btn,
+.delete-btn{
+    transition:.3s;
+}
+
+.upload-btn:hover,
+.edit-profile-btn:hover,
+.save-btn:hover,
+.view-btn:hover,
+.delete-btn:hover{
+    transform:translateY(-2px);
+}
+
+.download-btn{
+    text-decoration:none;
+    background:#3b82f6;
+    color:white;
+    padding:8px 18px;
+    border-radius:20px;
+    margin-right:10px;
+}
+
+.download-btn:hover{
+    background:#2563eb;
+}
+
+.success-message{
+    background:#d4edda;
+    color:#155724;
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:20px;
+    text-align:center;
+    font-weight:500;
+}
+
+.initial-avatar-large{
+    width:160px;
+    height:160px;
+    border-radius:50%;
+    background:#7c3aed;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:56px;
+    font-weight:700;
+    margin:auto;
+    border:6px solid #fff;
+}
+
+.remove-btn{
+    margin-top:10px;
+    background:#ff4d4d;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.remove-btn:hover{
+    background:#d93636;
+}
+
+.medical-profile-card {
+    margin-top: 25px;
+}
+
+.medical-info-text {
+    color: #64748b;
+    font-size: 14px;
+    margin: 8px 0 22px;
+}
+
+.medical-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.medical-form-grid > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.medical-profile-card label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.medical-profile-card input,
+.medical-profile-card select,
+.medical-profile-card textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.75);
+    color: #334155;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.medical-profile-card input:focus,
+.medical-profile-card select:focus,
+.medical-profile-card textarea:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+}
+
+.medical-profile-card textarea {
+    resize: vertical;
+    min-height: 100px;
+    margin-bottom: 18px;
+}
+
+.medical-profile-card .upload-btn {
+    width: auto;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(to right, #7c3aed, #9333ea);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.medical-profile-card .upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(124,58,237,0.25);
+}
+
+@media (max-width: 768px) {
+
+    .medical-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

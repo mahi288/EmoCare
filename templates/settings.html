@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>EmoCare | Settings</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/sidebar.css') }}">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/theme.css') }}">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/settings.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h2 class="logo">
+
+            <img src="{{ url_for('static', filename='images/logo.jpeg') }}">
+
+            EmoCare
+
+        </h2>
+
+        <ul>
+
+            <li onclick="window.location.href='/dashboard'">
+                🏠 Dashboard
+            </li>
+
+            <li onclick="window.location.href='/history'">
+                📊 Emotion History
+            </li>
+
+            <li onclick="window.location.href='/chat'">
+                🤖 Chat Companion
+            </li>
+
+            <li onclick="window.location.href='/reports'">
+                📈 Reports
+            </li>
+
+            <li onclick="window.location.href='/profile'">
+                👤 Profile
+            </li>
+
+            <li class="active">
+                ⚙️ Settings
+            </li>
+
+            <li onclick="window.location.href='/logout'">
+                🚪 Logout
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- Main -->
+
+    <div class="main-content">
+
+        <div class="topbar">
+
+            <h2>Settings</h2>
+
+        </div>
+
+        <!-- Account -->
+
+        <div class="setting-card">
+
+            <h3>👤 Account</h3>
+
+            <p>Name : {{ user.name }}</p>
+
+            <p>Email : {{ user.email }}</p>
+
+        </div>
+
+        <!-- Notifications -->
+
+        <div class="setting-card">
+
+            <h3>🔔 Notifications</h3>
+
+            <label>
+
+                <input type="checkbox" checked>
+
+                Email Notifications
+
+            </label>
+
+            <br><br>
+
+            <label>
+
+                <input type="checkbox" checked>
+
+                AI Wellness Tips
+
+            </label>
+
+        </div>
+
+        <!-- Appearance -->
+         
+        <div class="setting-card">
+            
+            <h3>🎨 Appearance</h3>
+            
+            <div class="theme-buttons">
+                
+                <button class="theme-btn light-btn" onclick="setTheme('light')">
+                    🌞 Light Mode
+                </button>
+                
+                <button class="theme-btn dark-btn" onclick="setTheme('dark')">
+                    🌙 Dark Mode
+                </button>
+            
+            </div>
+        
+        </div>
+
+        <!-- Privacy -->
+
+        <div class="setting-card">
+
+            <h3>🔒 Privacy</h3>
+
+            <button
+            class="danger-btn"
+        onclick="deleteAccount()">
+        
+        Delete My Account
+    
+    </button>
+        </div>
+
+        <!-- About -->
+
+        <div class="setting-card">
+
+            <h3>ℹ About EmoCare</h3>
+
+            <p>
+
+                Version 1.0
+
+            </p>
+
+            <p>
+
+                AI-powered Emotional Wellness Platform
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

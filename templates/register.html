@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EmoCare - Register</title>
+
+    <link rel="icon" type="image/png"
+          href="{{ url_for('static', filename='images/logo.jpeg') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet"
+href="{{ url_for('static', filename='css/theme.css') }}">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT SIDE FORM -->
+    <div class="left">
+
+        <!-- BRAND -->
+        <div class="brand">
+            <img src="{{ url_for('static', filename='images/logo.jpeg') }}"
+                 alt="EmoCare Logo">
+            <h2>EmoCare</h2>
+        </div>
+
+        <!-- TITLE -->
+        <h2>Create Your Account</h2>
+        <p>Join EmoCare and experience AI that understands you.</p>
+
+        <form id="registerForm" method="POST" action="/register">
+
+            <!-- NAME -->
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name">
+                <span class="error" id="nameError"></span>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+                <span class="error" id="emailError"></span>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="input-group">
+                <label>Password</label>
+                
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        name="password"
+                        placeholder="Enter your password"
+                        required>
+                        
+                    <span
+                        class="togglePassword"
+                        data-target="registerPassword">👁</span>
+                </div>
+            </div>
+
+            <small id="passwordHelp" style="display:block;margin-top:8px;color:#666;">
+                    Password must contain:
+                    <br>
+                    ✔ Minimum 8 characters
+                    <br>
+                    ✔ One uppercase letter
+                    <br>
+                    ✔ One lowercase letter
+                    <br>
+                    ✔ One number
+                    <br>
+                    ✔ One special character
+                </small>
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="input-group">
+                <label>Confirm Password</label>
+                
+                <div class="password-wrapper">
+                    <input
+                       type="password"
+                       id="confirmPassword"
+                       name="confirm_password"
+                       placeholder="Confirm your password"
+                       required>
+                       
+                    <span
+                       class="togglePassword"
+                       data-target="confirmPassword">👁</span>
+                </div>
+            </div>
+            
+            <!-- GENDER -->
+            <div class="input-group">
+                <label>Select Gender</label>
+                <select id="gender" name="gender">
+                    <option value="">Choose option</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Prefer not to say</option>
+                </select>
+
+                <span class="error" id="genderError"></span>
+            </div>
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- TERMS -->
+            <div class="checkbox">
+                <input type="checkbox" id="terms">
+                <span>I agree to the Terms & Conditions</span>
+            </div>
+
+            <small class="error" id="termsError"></small>
+
+            <!-- REGISTER BUTTON -->
+            <button type="submit" class="btn">Register</button>
+
+            <!-- LOGIN LINK -->
+            <p class="login-link">
+                Already have an account?
+                <a href="/login">Login</a>
+            </p>
+
+        </form>
+
+    </div>
+
+    <!-- RIGHT SIDE IMAGE -->
+    <div class="right">
+        <img src="{{ url_for('static', filename='images/register.png') }}"
+             alt="AI Companion"
+             width="200"
+             class="robot">
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script src="{{ url_for('static', filename='js/script.js') }}">
+
+const password=document.querySelector('input[name="password"]');
+
+const help=document.getElementById("passwordHelp");
+
+if(password){
+
+password.addEventListener("input",()=>{
+
+const value=password.value;
+
+const strong=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#]).{8,}$/;
+
+if(strong.test(value)){
+
+help.style.color="#16a34a";
+
+help.innerHTML="✔ Strong Password";
+
+}else{
+
+help.style.color="#dc2626";
+
+help.innerHTML=`
+Password must contain:<br>
+✔ Minimum 8 characters<br>
+✔ One uppercase letter<br>
+✔ One lowercase letter<br>
+✔ One number<br>
+✔ One special character`;
+
+}
+
+});
+
+}
+
+</script>
+
+<div id="toast" class="toast"></div>
+
+</body>
+</html>

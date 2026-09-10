@@ -1,0 +1,286 @@
+/* =====================================================
+   EMOCARE GLOBAL THEME
+   Light + Dark Mode
+===================================================== */
+
+/* =========================
+   LIGHT THEME
+========================= */
+
+:root{
+    --bg:linear-gradient(135deg,#a5b4fc,#c084fc);
+    --card:rgba(255,255,255,.78);
+    --sidebar:linear-gradient(180deg,#7c3aed,#9333ea);
+    --text:#1f2937;
+    --text-light:#6b7280;
+    --border:rgba(255,255,255,.35);
+    --primary:#7c3aed;
+    --primary-hover:#6d28d9;
+    --shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+
+/* =========================
+   DARK THEME
+========================= */
+
+body.dark-mode{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --sidebar:#111827;
+    --text:#f8fafc;
+    --text-light:#cbd5e1;
+    --border:#334155;
+    --primary:#8b5cf6;
+    --primary-hover:#7c3aed;
+    --shadow:0 15px 35px rgba(0,0,0,.45);
+}
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+
+    transition:
+        background .35s ease,
+        color .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.main,
+.main-content{
+    background:transparent;
+}
+
+
+/* =========================
+   CARDS
+========================= */
+
+.glass-card,
+.profile-card,
+.summary-box,
+.stat-card,
+.setting-card,
+.card,
+.emotion-card,
+.graph,
+.activity,
+.appointment,
+.mood-selector,
+.empty-history{
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    background:var(--sidebar);
+    color:white;
+}
+
+.sidebar h2,
+.sidebar li{
+    color:white;
+}
+
+.sidebar li{
+    transition:.25s;
+}
+
+.sidebar li:hover{
+    background:rgba(255,255,255,.12);
+    border-radius:12px;
+}
+
+.sidebar li.active{
+    background:rgba(255,255,255,.20);
+    border-radius:12px;
+}
+
+
+/* =========================
+   TEXT
+========================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    color:var(--text);
+}
+
+p,
+small,
+label,
+span{
+    color:var(--text-light);
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+input,
+select,
+textarea{
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--border);
+}
+
+input::placeholder,
+textarea::placeholder{
+    color:var(--text-light);
+}
+
+
+/* =========================
+   SEARCH BOX
+========================= */
+
+.search-box{
+    background:var(--card);
+    border:1px solid var(--border);
+}
+
+.search-box input{
+    background:transparent;
+    color:var(--text);
+}
+
+
+/* =========================
+   TABLES
+========================= */
+
+table{
+    color:var(--text);
+}
+
+thead{
+    background:var(--primary);
+    color:white;
+}
+
+tbody tr{
+    border-bottom:1px solid var(--border);
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+button,
+.btn,
+.upload-btn,
+.save-btn{
+    background:var(--primary);
+    color:white;
+    border:none;
+    transition:.25s;
+}
+
+button:hover,
+.btn:hover,
+.upload-btn:hover,
+.save-btn:hover{
+    background:var(--primary-hover);
+    transform:translateY(-2px);
+}
+
+
+/* =========================
+   LINKS
+========================= */
+
+a{
+    color:var(--primary);
+    text-decoration:none;
+}
+
+a:hover{
+    color:var(--primary-hover);
+}
+
+
+/* =========================
+   MODALS
+========================= */
+
+.modal-content{
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--border);
+}
+
+
+/* =========================
+   CHARTS
+========================= */
+
+canvas{
+    background:transparent;
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:var(--primary);
+    border-radius:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+/* ===========================
+   Emotion History Theme
+=========================== */
+
+body.dark-mode .emotion-card{
+    background:var(--card) !important;
+    color:var(--text) !important;
+}
+
+body.dark-mode .emotion-card p{
+    color:var(--text) !important;
+}
+
+body.dark-mode .date{
+    color:var(--text-light) !important;
+}
+
+body.dark-mode .main h1{
+    color:var(--text) !important;
+}

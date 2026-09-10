@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EmoCare - Caring Beyond Cancer</title>
+
+    <link rel="icon" type="image/png"
+          href="{{ url_for('static', filename='images/logo.jpeg') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet"
+href="{{ url_for('static', filename='css/theme.css') }}">
+
+    <!-- CSS File -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+
+<body>
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-text">
+        <h1>Your Emotions Matter.<br>Your Companion Understands.</h1>
+
+        <p>
+            The EmoCare-Caring Beyond Cancer System is an AI-powered assistant
+            that understands, responds, and adapts to your emotions in real-time.
+        </p>
+
+        <div class="buttons">
+            <button class="btn btn-primary"
+                    onclick="window.location.href='/register'">
+                Get Started
+            </button>
+
+            <button class="btn btn-secondary"
+                    onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+                Learn More
+            </button>
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <img src="{{ url_for('static', filename='images/home_robot.png') }}"
+             alt="Robot"
+             class="robot">
+    </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="about" id="about">
+
+    <h2>What is EmoCare?</h2>
+
+    <p>
+        The EmoCare is an intelligent emotion adaptive companion AI-based system designed to
+        understand and respond to human emotions in real time. By analyzing emotional
+        inputs through user interactions, the system provides supportive responses and
+        personalized suggestions to improve emotional well-being.
+    </p>
+
+    <div class="about-grid">
+
+        <div class="about-card">
+            <img src="{{ url_for('static', filename='images/emotion-recognition.png') }}"
+                 alt="emotion detection"
+                 width="60">
+
+            <h3>Emotion Detection</h3>
+
+            <p>
+                The system analyzes user input to identify emotions such as happiness,
+                stress, sadness, or anxiety.
+            </p>
+        </div>
+
+        <div class="about-card">
+            <img src="{{ url_for('static', filename='images/interactional-dialogue.png') }}"
+                 alt="adaptive support"
+                 width="60">
+
+            <h3>Adaptive Support</h3>
+
+            <p>
+                Based on the detected emotion, EAC generates supportive responses,
+                coping suggestions, and helpful guidance.
+            </p>
+        </div>
+
+        <div class="about-card">
+            <img src="{{ url_for('static', filename='images/clipboard-checklist.png') }}"
+                 alt="Emotion Tracking"
+                 width="60">
+
+            <h3>Emotion Tracking</h3>
+
+            <p>
+                User emotional patterns are tracked over time to help identify trends
+                and improve emotional awareness.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+
+    <h2>Key Features</h2>
+
+    <div class="feature-box">
+
+        <div class="card">
+            <h3>Smart Emotion Detection</h3>
+            <p>Detects happiness, stress, anger, sadness and more.</p>
+        </div>
+
+        <div class="card">
+            <h3>Adaptive Responses</h3>
+            <p>Changes tone and suggestions according to emotional state.</p>
+        </div>
+
+        <div class="card">
+            <h3>Safe & Secure</h3>
+            <p>Privacy-focused and user data protected.</p>
+        </div>
+
+        <div class="card">
+            <h3>Emotion Tracking</h3>
+            <p>Tracks mood patterns over time.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+
+    <h2>How It Works</h2>
+
+    <div class="how-flow">
+
+        <div class="how-step">
+            <img src="{{ url_for('static', filename='images/step1.png') }}"
+                 alt="User Interacts">
+
+            <p><span>1</span> User Interacts</p>
+        </div>
+
+        <div class="arrow">➜</div>
+
+        <div class="how-step">
+            <img src="{{ url_for('static', filename='images/step2.png') }}"
+                 alt="Emotion Detected">
+
+            <p><span>2</span> Emotion Detected</p>
+        </div>
+
+        <div class="arrow">➜</div>
+
+        <div class="how-step">
+            <img src="{{ url_for('static', filename='images/step3.png') }}"
+                 alt="Adaptive Response">
+
+            <p><span>3</span> Adaptive Response</p>
+        </div>
+
+        <div class="arrow">➜</div>
+
+        <div class="how-step">
+            <img src="{{ url_for('static', filename='images/step4.png') }}"
+                 alt="Support & Suggest">
+
+            <p><span>4</span> Support & Suggest</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- WHY CHOOSE -->
+<section class="why">
+    <h2>Why Choose EAC?</h2>
+
+    <ul>
+        <li>✔ Personalized Interaction</li>
+        <li>✔ Emotional Awareness</li>
+        <li>✔ 24/7 Availability</li>
+        <li>✔ Continuous Learning</li>
+    </ul>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+
+    <h2>Experience AI That Understands You</h2>
+
+    <button class="btn btn-secondary"
+            onclick="window.location.href='/login'">
+        Try EAC Now
+    </button>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+    © 2026 EmoCare-Caring Beyond Cancer | About | Features | Contact | Privacy Policy
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

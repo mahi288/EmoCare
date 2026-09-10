@@ -1,0 +1,199 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+}
+
+.dashboard{
+    display:flex;
+    min-height:100vh;
+}
+
+/* MAIN */
+
+.main{
+    flex:1;
+    padding:40px;
+}
+
+.main h1{
+    margin-bottom:25px;
+    color:var(--text);
+}
+
+/* CARDS */
+
+.history-container{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.emotion-card{
+    background:var(--card);
+    color:var(--text);
+    padding:20px;
+    border-radius:18px;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+}
+
+.emotion-card:hover{
+    transform:translateY(-4px);
+}
+
+.emotion-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+}
+
+.emotion-tag{
+    background:#4b4bf7;
+    color:white;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:14px;
+}
+
+.date{
+    color:var(--text-light);
+    font-size:14px;
+}
+
+.emotion-card p{
+    color:var(--text);
+    line-height:1.7;
+}
+
+.joy{
+    background:#22c55e;
+}
+
+.sadness{
+    background:#3b82f6;
+}
+
+.fear{
+    background:#f59e0b;
+}
+
+.anger{
+    background:#ef4444;
+}
+
+.love{
+    background:#ec4899;
+}
+
+.empty-history p{
+    color:var(--text-light);
+    margin-top:10px;
+    margin-bottom:30px;
+    line-height:1.6;
+    font-size:16px;
+    font-weight:500;
+}
+
+.empty-history h2{
+    color:var(--text);
+    margin-bottom:12px;
+}
+
+.empty-history{
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:20px;
+    padding:50px;
+    text-align:center;
+}
+
+.empty-history button{
+    background:var(--primary);
+    color:white;
+    border:none;
+    padding:14px 30px;
+    border-radius:50px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    box-shadow:var(--shadow);
+}
+
+.empty-history button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(106,17,203,0.4);
+}
+
+.empty-history button:active{
+    transform:scale(0.97);
+}
+
+.empty-icon{
+    font-size:65px;
+    margin-bottom:20px;
+}
+
+/* Toast Notification */
+
+.toast{
+position:fixed;
+top:25px;
+right:25px;
+background:var(--primary);
+color:white;
+padding:15px 25px;
+border-radius:12px;
+font-size:15px;
+font-weight:500;
+box-shadow:0 10px 25px rgba(0,0,0,.2);
+opacity:0;
+pointer-events:none;
+transform:translateX(120%);
+transition:.4s;
+z-index:9999;
+}
+
+.toast.show{
+opacity:1;
+transform:translateX(0);
+}
+
+.history-container{
+    animation:fadeIn .5s ease;
+}
+
+@keyframes fadeIn{
+from{
+    opacity:0;
+    transform:translateY(20px);
+}
+
+to{
+    opacity:1;
+    transform:translateY(0);
+}
+}
+
+/* Dark mode improvements */
+
+body.dark-mode .emotion-card{
+    background:var(--card);
+    border:1px solid var(--border);
+}
+
+body.dark-mode .emotion-tag{
+    color:white;
+}
+
+body.dark-mode .main h1{
+    color:var(--text);
+}

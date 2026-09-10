@@ -1,0 +1,34 @@
+# Virtual environment
+venv/
+.venv/
+
+# Environment variables / API keys
+.env
+.env.*
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Hugging Face / ML cache
+.cache/
+huggingface/
+*.bin
+*.safetensors
+
+# Uploaded user files
+static/uploads/reports/*
+static/uploads/profiles/*
+
+# Keep upload folders
+!static/uploads/reports/.gitkeep
+!static/uploads/profiles/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
