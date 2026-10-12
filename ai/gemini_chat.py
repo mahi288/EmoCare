@@ -116,5 +116,3 @@ def get_ai_response(message):
             "I'm having a little trouble responding right now. 💙 "
             "Try taking a few slow breaths and please send your message again."
         )
-    
-print("API KEY =", os.getenv("GEMINI_API_KEY"))

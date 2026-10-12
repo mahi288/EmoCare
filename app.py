@@ -15,12 +15,11 @@ from email.mime.text import MIMEText
 from dotenv import load_dotenv
 
 app = Flask(__name__)
-app.secret_key="emocare_secret"
-
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "local-development-key")
 load_dotenv()
 
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD").replace(" ", "")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "").replace(" ", "")
 
 REPORT_FOLDER = "static/uploads/reports"
 PROFILE_FOLDER = "static/uploads/profiles"
