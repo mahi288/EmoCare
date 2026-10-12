@@ -7,7 +7,7 @@ import re
 import time
 from database.db import get_db
 from ai.emotion_detector import detect_emotion
-from ai.gemini_chat import get_ai_response
+from ai.gemini_chat import get_intent_and_response
 import random
 import smtplib
 from datetime import datetime, timedelta
@@ -499,10 +499,10 @@ def login():
 
             session.clear()
             session["user_email"] = user["email"]
-            session["user_name"] = user["name"]      
-            
+            session["user_name"] = user["name"]
+
             return redirect("/dashboard?success=login")
-        
+
         else:
             return redirect("/login?error=invalid")
 
@@ -625,15 +625,15 @@ def reset_password():
 
         password = request.form['password']
         confirm = request.form['confirm']
-        
+
         if not is_strong_password(password):
             flash("Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.")
             return redirect('/reset_password')
-        
+
         if password != confirm:
             flash("Passwords do not match.")
             return redirect('/reset_password')
-        
+
         email = session['reset_email']
 
         db = get_db()
@@ -669,10 +669,10 @@ def register():
         email = request.form["email"]
         password = request.form["password"]
         password=request.form["password"]
-        
+
         if not is_strong_password(password):
             flash("Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.")
-            
+
             return redirect("/register")
 
         gender = request.form["gender"]
@@ -830,6 +830,77 @@ def dashboard():
 
             emotion_counts[dashboard_emotion] += row["total"]
 
+        # ==========================
+        # Patient Treatment Information
+        # ==========================
+
+        cursor.execute("""
+            SELECT
+                cancer_type,
+                cancer_stage,
+                current_treatment
+            FROM users
+            WHERE email = %s
+        """, (session["user_email"],))
+
+        treatment_info = cursor.fetchone()
+
+    # ==========================
+    # Recent Activity
+    # ==========================
+
+    recent_activities = []
+
+
+    # Recent Mood Check-ins
+    cursor.execute("""
+        SELECT emotion, created_at
+        FROM emotion_history
+        WHERE user_email=%s
+        ORDER BY created_at DESC
+        LIMIT 3
+    """, (session["user_email"],))
+
+    moods = cursor.fetchall()
+
+
+    for mood in moods:
+
+        recent_activities.append({
+            "icon": "😊",
+            "text": f"Mood check-in completed - {mood['emotion'].capitalize()} detected",
+            "time": mood["created_at"]
+        })
+
+
+    # Recent Reports
+    cursor.execute("""
+        SELECT report_name, uploaded_at
+        FROM medical_reports
+        WHERE user_email=%s
+        ORDER BY uploaded_at DESC
+        LIMIT 2
+    """, (session["user_email"],))
+
+    reports_activity = cursor.fetchall()
+
+
+    for report in reports_activity:
+
+        recent_activities.append({
+            "icon": "📄",
+            "text": f"Medical report uploaded - {report['report_name']}",
+            "time": report["uploaded_at"]
+        })
+
+
+    # Sort activities by latest time
+    recent_activities = sorted(
+        recent_activities,
+        key=lambda x: x["time"],
+        reverse=True
+    )[:5]
+
     # ==========================
     # Notifications
     # ==========================
@@ -850,15 +921,18 @@ def dashboard():
     cursor.close()
 
     return render_template(
-        "dashboard.html",
-        user=user,
-        current_mood=current_mood,
-        weekly_average=weekly_average,
-        today_sessions=today_sessions,
-        emotion_counts=emotion_counts,
-        notifications=notifications,
-        unread=unread
-    )
+    "dashboard.html",
+    user=user,
+    current_mood=current_mood,
+    weekly_average=weekly_average,
+    today_sessions=today_sessions,
+    emotion_counts=emotion_counts,
+    notifications=notifications,
+    unread=unread,
+    treatment_info=treatment_info,
+    recent_activities=recent_activities
+)
+
 
 @app.route("/detect_emotion", methods=["POST"])
 def detect_emotion_route():
@@ -924,9 +998,9 @@ def chat():
 # Create a session only if
 # one doesn't already exist
 # ----------------------------
-        
+
         if session.get("chat_session_id"):
-            
+
             cursor.execute("""
             SELECT
             user_message,
@@ -936,13 +1010,13 @@ def chat():
             WHERE session_id=%s
             ORDER BY timestamp ASC
             """, (session["chat_session_id"],))
-            
+
             chats = cursor.fetchall()
-            
+
         else:
 
             chats = []
-    
+
     cursor.close()
 
     return render_template(
@@ -952,166 +1026,229 @@ def chat():
         sessions=sessions
     )
 
+
 @app.route("/send_message", methods=["POST"])
 def send_message():
 
     if "user_email" not in session:
         return redirect("/login")
 
-    message = request.form["message"].strip()
+    message = request.form.get("message", "").strip()
+
+    if not message:
+        return {
+            "intent": "NEUTRAL",
+            "emotion": None,
+            "reply": "Please enter a message so I can help you. 💙"
+        }, 400
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
-    # Get logged-in user
-    cursor.execute("""
-        SELECT id
-        FROM users
-        WHERE email=%s
-    """, (session["user_email"],))
+    try:
 
-    logged_user = cursor.fetchone()
-    user_id = logged_user["id"]
-
-    # Create a new chat session only when first message is sent
-    if "chat_session_id" not in session:
+        # ----------------------------------
+        # 1. Get logged-in user
+        # ----------------------------------
 
         cursor.execute("""
-        INSERT INTO chat_sessions(user_id)
-        VALUES(%s)
-        """, (user_id,))
+            SELECT id
+            FROM users
+            WHERE email=%s
+        """, (session["user_email"],))
 
-        db.commit()
-        session["chat_session_id"] = cursor.lastrowid
+        logged_user = cursor.fetchone()
 
-    # -------------------------------------------------
-    # Detect emotion only for meaningful messages
-    # -------------------------------------------------
+        if not logged_user:
+            session.clear()
+            return {"error": "Please log in again."}, 401
 
-    casual_messages = {
-        "hi",
-        "hello",
-        "hey",
-        "hii",
-        "hiii",
-        "hello there",
-        "hey there",
-        "good morning",
-        "good afternoon",
-        "good evening",
-        "good night",
-        "thanks",
-        "thank you",
-        "okay",
-        "ok",
-        "bye",
-        "goodbye"
-    }
+        user_id = logged_user["id"]
 
-    is_emotional_message = (
-        len(message) > 10
-        and message.lower() not in casual_messages
-    )
+        # ----------------------------------
+        # 2. Create a chat session if needed
+        # ----------------------------------
 
-    emotion = None
+        if "chat_session_id" not in session:
 
-    if is_emotional_message:
-        emotion = detect_emotion(message)
+            cursor.execute("""
+                INSERT INTO chat_sessions(user_id)
+                VALUES(%s)
+            """, (user_id,))
 
-    # Generate AI reply
-    reply = get_ai_response(message)
+            db.commit()
 
-    # -------------------------------------------------
-    # Save emotion history ONLY if emotion was detected
-    # -------------------------------------------------
+            session["chat_session_id"] = cursor.lastrowid
 
-    if emotion:
+        chat_session_id = session["chat_session_id"]
+
+        # ----------------------------------
+        # 3. Verify session ownership
+        # ----------------------------------
 
         cursor.execute("""
-            INSERT INTO emotion_history
-            (user_email, message, emotion)
-            VALUES (%s, %s, %s)
-        """, (
-            session["user_email"],
-            message,
-            emotion
-        ))
+            SELECT id
+            FROM chat_sessions
+            WHERE id=%s AND user_id=%s
+        """, (chat_session_id, user_id))
 
-        # Save mood log
+        chat_session = cursor.fetchone()
+
+        if not chat_session:
+            session.pop("chat_session_id", None)
+
+            return {
+                "error": "Chat session not found. Please start a new chat."
+            }, 404
+
+        # ----------------------------------
+        # 4. Classify intent and generate reply
+        # ----------------------------------
+
+        result = get_intent_and_response(message)
+
+        intent = result["intent"]
+        reply = result["reply"]
+
+        # Always initialize emotion for every message.
+        emotion = None
+
+        # ----------------------------------
+        # 5. Detect emotion only for emotional
+        #    support messages
+        # ----------------------------------
+
+        if intent == "EMOTIONAL_SUPPORT":
+
+            try:
+
+                detected_emotion = detect_emotion(message)
+
+                if detected_emotion:
+
+                    detected_emotion = (
+                        detected_emotion.lower().strip()
+                    )
+
+                    # Neutral output is not recorded as a mood.
+                    if detected_emotion != "neutral":
+                        emotion = detected_emotion
+
+            except Exception as e:
+
+                print("Emotion Detection Error:", str(e))
+
+        # ----------------------------------
+        # 6. Save emotion history when detected
+        # ----------------------------------
+
+        if emotion:
+
+            cursor.execute("""
+                INSERT INTO emotion_history
+                (user_email, message, emotion)
+                VALUES (%s, %s, %s)
+            """, (
+                session["user_email"],
+                message,
+                emotion
+            ))
+
+            cursor.execute("""
+                INSERT INTO mood_logs
+                (user_id, message, emotion)
+                VALUES (%s, %s, %s)
+            """, (
+                user_id,
+                message,
+                emotion
+            ))
+
+        # ----------------------------------
+        # 7. Save chat history
+        # ----------------------------------
+
         cursor.execute("""
-            INSERT INTO mood_logs
-            (user_id, message, emotion)
-            VALUES (%s, %s, %s)
+            INSERT INTO chat_history
+            (
+                user_id,
+                session_id,
+                user_message,
+                bot_response
+            )
+            VALUES (%s, %s, %s, %s)
         """, (
             user_id,
+            chat_session_id,
             message,
-            emotion
+            reply
         ))
 
-    # -------------------------------------------------
-    # Always save chat history
-    # -------------------------------------------------
-
-    cursor.execute("""
-        INSERT INTO chat_history
-        (
-            user_id,
-            session_id,
-            user_message,
-            bot_response
-        )
-        VALUES (%s, %s, %s, %s)
-    """, (
-        user_id,
-        session["chat_session_id"],
-        message,
-        reply
-    ))
-
-    # Count messages in current session
-    cursor.execute("""
-        SELECT COUNT(*) AS total
-        FROM chat_history
-        WHERE session_id=%s
-    """, (session["chat_session_id"],))
-
-    total_messages = cursor.fetchone()["total"]
-
-    # Generate meaningful title after 3 messages
-    if total_messages == 3:
+        # ----------------------------------
+        # 8. Generate a chat title after
+        #    the third message
+        # ----------------------------------
 
         cursor.execute("""
-            SELECT user_message
+            SELECT COUNT(*) AS total
             FROM chat_history
             WHERE session_id=%s
-            ORDER BY timestamp ASC
-        """, (session["chat_session_id"],))
+        """, (chat_session_id,))
 
-        conversation = cursor.fetchall()
+        total_messages = cursor.fetchone()["total"]
 
-        user_messages = [
-            chat["user_message"]
-            for chat in conversation
-        ]
+        if total_messages == 3:
 
-        title = generate_local_chat_title(user_messages)
+            cursor.execute("""
+                SELECT user_message
+                FROM chat_history
+                WHERE session_id=%s
+                ORDER BY timestamp ASC
+            """, (chat_session_id,))
 
-        cursor.execute("""
-            UPDATE chat_sessions
-            SET title=%s
-            WHERE id=%s
-        """, (
-            title,
-            session["chat_session_id"]
-        ))
+            conversation = cursor.fetchall()
 
-    db.commit()
-    cursor.close()
+            user_messages = [
+                chat["user_message"]
+                for chat in conversation
+            ]
 
-    return {
-        "emotion": emotion,
-        "reply": reply
-    }
+            title = generate_local_chat_title(user_messages)
+
+            cursor.execute("""
+                UPDATE chat_sessions
+                SET title=%s
+                WHERE id=%s AND user_id=%s
+            """, (
+                title,
+                chat_session_id,
+                user_id
+            ))
+
+        db.commit()
+
+        # ----------------------------------
+        # 9. Return data to the frontend
+        # ----------------------------------
+
+        return {
+            "intent": intent,
+            "emotion": emotion,
+            "reply": reply
+        }
+
+    except Exception as e:
+
+        db.rollback()
+
+        print("Send Message Error:", str(e))
+
+        return {
+            "error": "Something went wrong while processing your message."
+        }, 500
+
+    finally:
+        cursor.close()
 
 @app.route("/reset_chat")
 def reset_chat():
@@ -1867,8 +2004,3 @@ def test_report(report_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-
-

@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EmoCare - Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="icon" type="image/jpeg"
           href="{{ url_for('static', filename='images/logo.jpeg') }}">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/sidebar.css') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/theme.css') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
 </head>
 
 <body>
@@ -26,8 +29,10 @@
 
     <!-- SIDEBAR -->
     <div class="sidebar">
+
         <h2 class="logo">
-            <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="EmoCare Logo">
+            <img src="{{ url_for('static', filename='images/logo.jpeg') }}"
+                 alt="EmoCare Logo">
             EmoCare
         </h2>
 
@@ -40,6 +45,7 @@
             <li onclick="window.location.href='/settings'">⚙️ Settings</li>
             <li onclick="window.location.href='/logout'">🚪 Logout</li>
         </ul>
+
     </div>
 
     <!-- MAIN CONTENT -->
@@ -48,108 +54,209 @@
         <!-- TOPBAR -->
         <div class="topbar">
 
-            <h3 id="welcomeUser">Welcome Back {{ user.name}} 👋</h3>
+            <h3 id="welcomeUser">
+                Welcome Back {{ user.name }} 👋
+            </h3>
 
             <div class="top-right">
-                <div class="search-box">
-                    <input type="text" placeholder="Search emotions, reports...">
-                    <button class="mic">🎤</button>
+
+                <!-- SEARCH BOX -->
+                <div class="dashboard-search-container">
+
+                    <div class="search-box">
+
+                        <input
+                            type="text"
+                            id="dashboardSearch"
+                            placeholder="Search emotions, reports..."
+                            aria-label="Search EmoCare"
+                            autocomplete="off"
+                        >
+
+                        <button
+                            type="button"
+                            id="searchBtn"
+                            aria-label="Search">
+                            🔍
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="searchResults"
+                        class="search-results"
+                        role="status"
+                        aria-live="polite"
+                        style="display: none;">
+                    </div>
+
                 </div>
 
+                <!-- NOTIFICATIONS -->
                 <div class="notification-container">
 
-    <button id="notificationBtn">
-        🔔
-        {% if unread > 0 %}
-            <span class="badge">{{ unread }}</span>
-        {% endif %}
-    </button>
+                    <button type="button"
+                            id="notificationBtn"
+                            aria-label="Notifications">
 
-    <div id="notificationDropdown" class="notification-dropdown">
+                        🔔
 
-        <div class="notification-header">
-            <h4>Notifications</h4>
-        </div>
+                        {% if unread > 0 %}
+                            <span class="badge">{{ unread }}</span>
+                        {% endif %}
 
-        {% if notifications %}
+                    </button>
 
-            {% for n in notifications %}
-                <div class="notification-item">
-                    <strong>{{ n.title }}</strong>
-                    <p>{{ n.message }}</p>
-                </div>
-            {% endfor %}
+                    <div id="notificationDropdown"
+                         class="notification-dropdown">
 
-        {% else %}
+                        <div class="notification-header">
+                            <h4>Notifications</h4>
+                        </div>
 
-            <p style="padding:15px;">No Notifications</p>
+                        {% if notifications %}
 
-        {% endif %}
+                            {% for n in notifications %}
+                                <div class="notification-item">
+                                    <strong>{{ n.title }}</strong>
+                                    <p>{{ n.message }}</p>
+                                </div>
+                            {% endfor %}
 
-    </div>
+                        {% else %}
 
-</div>
-                <a href="/profile" class="profile-avatar">
-                    
-                    {% if user.profile_photo %}
-                    
-                    <img src="{{ url_for('static', filename='uploads/profiles/' + user.profile_photo) }}">
-                    
-                    {% else %}
-                    
-                    <div class="initial-avatar">
-                        
-                        {{ user.initials }}
-                    
+                            <p style="padding: 15px;">
+                                No Notifications
+                            </p>
+
+                        {% endif %}
+
                     </div>
-                    
+
+                </div>
+
+                <!-- PROFILE AVATAR -->
+                <a href="/profile" class="profile-avatar">
+
+                    {% if user.profile_photo %}
+
+                        <img
+                            src="{{ url_for('static', filename='uploads/profiles/' + user.profile_photo) }}"
+                            alt="Profile photo">
+
+                    {% else %}
+
+                        <div class="initial-avatar">
+                            {{ user.initials }}
+                        </div>
+
                     {% endif %}
-                
+
                 </a>
-            
+
             </div>
-        
+
         </div>
 
-        <!-- CARDS -->
+        <!-- DASHBOARD CARDS -->
         <div class="cards">
 
+            <!-- MOOD SELECTOR -->
             <div class="mood-selector">
+
                 <h4>Select Your Mood</h4>
 
                 <div class="mood-container">
-                    <button class="moodBtn" onclick="setMood('happy')">😊 Happy</button>
-                    <button class="moodBtn" onclick="setMood('calm')">😌 Calm</button>
-                    <button class="moodBtn" onclick="setMood('sad')">😢 Sad</button>
-                    <button class="moodBtn" onclick="setMood('angry')">😡 Angry</button>
-                    <button class="moodBtn" onclick="setMood('stressed')">😰 Stressed</button>
+
+                    <button type="button"
+                            class="moodBtn"
+                            onclick="setMood('happy')">
+                        😊 Happy
+                    </button>
+
+                    <button type="button"
+                            class="moodBtn"
+                            onclick="setMood('calm')">
+                        😌 Calm
+                    </button>
+
+                    <button type="button"
+                            class="moodBtn"
+                            onclick="setMood('sad')">
+                        😢 Sad
+                    </button>
+
+                    <button type="button"
+                            class="moodBtn"
+                            onclick="setMood('angry')">
+                        😡 Angry
+                    </button>
+
+                    <button type="button"
+                            class="moodBtn"
+                            onclick="setMood('stressed')">
+                        😰 Stressed
+                    </button>
+
                 </div>
+
             </div>
 
+            <!-- CURRENT MOOD -->
             <div class="card">
+
                 <h4>Current Mood</h4>
-                <p class="highlight" id="currentMood"> {{ current_mood }}</p>
+
+                <p class="highlight" id="currentMood">
+                    {{ current_mood }}
+                </p>
+
             </div>
 
+            <!-- WEEKLY AVERAGE -->
             <div class="card">
+
                 <h4>Weekly Average</h4>
-                <p class="highlight"> {{ weekly_average }}</p>
+
+                <p class="highlight">
+                    {{ weekly_average }}
+                </p>
+
             </div>
 
+            <!-- MOTIVATION -->
             <div class="card motivation-card">
+
                 <h4>Motivation</h4>
-                <p id="moodQuote">Select a mood to see a quote</p>
+
+                <p id="moodQuote">
+                    Select a mood to see a quote
+                </p>
+
             </div>
 
+            <!-- SESSIONS TODAY -->
             <div class="card">
+
                 <h4>Sessions Today</h4>
+
                 <p>{{ today_sessions }}</p>
+
             </div>
 
+            <!-- DAILY WELLNESS TIP -->
             <div class="card tip-card">
+
                 <h4>Daily Wellness Tip</h4>
-                <p id="wellnessTip">Click below to get a wellness tip</p>
-                <button onclick="newTip()">✨ Get Tip</button>
+
+                <p id="wellnessTip">
+                    Click below to get a wellness tip
+                </p>
+
+                <button type="button" onclick="newTip()">
+                    ✨ Get Tip
+                </button>
+
             </div>
 
         </div>
@@ -157,31 +264,136 @@
         <!-- CONTENT GRID -->
         <div class="content-grid">
 
-            <!-- LEFT -->
+            <!-- LEFT SECTION: MOOD CHART -->
             <div class="left-section">
+
                 <div class="graph">
+
                     <h4>Mood Overview</h4>
+
                     <canvas id="moodChart"></canvas>
+
                 </div>
+
             </div>
 
-            <!-- RIGHT -->
+            <!-- RIGHT SECTION -->
             <div class="right-section">
 
-                <!-- Doctor Appointment -->
+                <!-- TREATMENT INFORMATION -->
                 <div class="appointment">
-                    <h4>Doctor Appointment</h4>
-                    <p><strong>Dr. Smith</strong></p>
-                    <p>2:00 PM - 25 April 2024</p>
+
+                    <h4>🩺 Treatment Information</h4>
+
+                    {% if treatment_info %}
+
+                        {% if treatment_info.cancer_type %}
+                            <p>
+                                <strong>Cancer Type:</strong>
+                                {{ treatment_info.cancer_type }}
+                            </p>
+                        {% endif %}
+
+                        {% if treatment_info.cancer_stage %}
+                            <p>
+                                <strong>Stage:</strong>
+                                {{ treatment_info.cancer_stage }}
+                            </p>
+                        {% endif %}
+
+                        {% if treatment_info.current_treatment %}
+                            <p>
+                                <strong>Current Treatment:</strong>
+                                {{ treatment_info.current_treatment }}
+                            </p>
+                        {% endif %}
+
+                        {% if not treatment_info.cancer_type
+                              and not treatment_info.cancer_stage
+                              and not treatment_info.current_treatment %}
+                            <p>
+                                Your treatment information has not been added yet.
+                            </p>
+                        {% endif %}
+
+                        <p class="profile-link">
+                            <a href="/profile">
+                                View or update profile →
+                            </a>
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            No medical profile added yet.
+                        </p>
+
+                        <p>
+                            Add your medical information to view it here.
+                        </p>
+
+                        <p class="profile-link">
+                            <a href="/profile">
+                                Go to Profile →
+                            </a>
+                        </p>
+
+                    {% endif %}
+
                 </div>
 
-                <!-- Recent Activity -->
+                <!-- RECENT ACTIVITY -->
                 <div class="activity">
-                    <h4>Recent Activity</h4>
-                    <ul>
-                        <li>✔ Chat session completed - Happy mood detected</li>
-                        <li>✔ Weekly report generated</li>
-                    </ul>
+
+                    <h4>📌 Recent Activity</h4>
+
+                    {% if recent_activities %}
+
+                        <ul>
+
+                            {% for activity in recent_activities %}
+
+                                <li>
+
+                                    <span>
+                                        {{ activity.icon|default('✔') }}
+                                        {{ activity.text|default(activity.title|default('Activity completed')) }}
+                                    </span>
+
+                                    {% if activity.time is defined
+                                          and activity.time %}
+
+                                        <br>
+
+                                        <small>
+                                            {{ activity.time.strftime('%d %b %Y, %I:%M %p') }}
+                                        </small>
+
+                                    {% elif activity.created_at is defined
+                                            and activity.created_at %}
+
+                                        <br>
+
+                                        <small>
+                                            {{ activity.created_at.strftime('%d %b %Y, %I:%M %p') }}
+                                        </small>
+
+                                    {% endif %}
+
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    {% else %}
+
+                        <p>
+                            No recent activity yet. Your mood check-ins and other activities will appear here.
+                        </p>
+
+                    {% endif %}
+
                 </div>
 
             </div>
@@ -192,19 +404,152 @@
 
 </div>
 
+<!-- EMOTION DATA FOR CHART -->
 <script>
     const emotionCounts = {{ emotion_counts | tojson }};
     console.log("Emotion Counts:", emotionCounts);
 </script>
 
+<!-- EXISTING DASHBOARD JAVASCRIPT -->
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
+<!-- CHAT COMPANION BUTTON -->
+<div class="chatbot-btn"
+     onclick="window.location.href='/chat'"
+     title="Open Chat Companion"
+     role="button"
+     aria-label="Open Chat Companion">
+    💬
+</div>
 
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
-<div class="chatbot-btn" onclick="window.location.href='/chat'">💬</div>
-
+<!-- TOAST NOTIFICATION -->
 <div id="toast" class="toast"></div>
+
+<!-- DASHBOARD SEARCH -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("dashboardSearch");
+    const searchButton = document.getElementById("searchBtn");
+    const searchResults = document.getElementById("searchResults");
+
+    if (!searchInput || !searchButton || !searchResults) {
+        return;
+    }
+
+    const destinations = [
+        {
+            keywords: [
+                "emotion history",
+                "mood history",
+                "history",
+                "emotions",
+                "moods"
+            ],
+            label: "📊 Emotion History",
+            url: "/history"
+        },
+        {
+            keywords: ["chat", "companion", "chatbot"],
+            label: "🤖 Chat Companion",
+            url: "/chat"
+        },
+        {
+            keywords: ["report", "reports", "medical report"],
+            label: "📈 Reports",
+            url: "/reports"
+        },
+        {
+            keywords: ["profile", "account", "medical profile"],
+            label: "👤 Profile",
+            url: "/profile"
+        },
+        {
+            keywords: ["settings", "preferences"],
+            label: "⚙️ Settings",
+            url: "/settings"
+        },
+        {
+            keywords: ["dashboard", "home"],
+            label: "🏠 Dashboard",
+            url: "/dashboard"
+        }
+    ];
+
+    function performSearch() {
+
+        const query = searchInput.value.trim().toLowerCase();
+
+        searchResults.replaceChildren();
+        searchResults.style.display = "block";
+
+        if (!query) {
+            searchResults.textContent =
+                "Please enter something to search.";
+            return;
+        }
+
+        const matches = destinations.filter(function (item) {
+            return item.keywords.some(function (keyword) {
+                return keyword.includes(query) ||
+                       query.includes(keyword);
+            });
+        });
+
+        if (matches.length === 0) {
+            searchResults.textContent =
+                "No matching section found. Try emotions, history, reports, chat, profile, or settings.";
+            return;
+        }
+
+        matches.forEach(function (item) {
+
+            const link = document.createElement("a");
+
+            link.href = item.url;
+            link.textContent = item.label;
+
+            searchResults.appendChild(link);
+
+        });
+
+    }
+
+    searchButton.addEventListener("click", performSearch);
+
+    searchInput.addEventListener("keydown", function (event) {
+
+        if (event.key === "Enter") {
+            event.preventDefault();
+            performSearch();
+        }
+
+        if (event.key === "Escape") {
+            searchResults.replaceChildren();
+            searchResults.style.display = "none";
+        }
+
+    });
+
+    document.addEventListener("click", function (event) {
+
+        if (!event.target.closest(".dashboard-search-container")) {
+            searchResults.style.display = "none";
+        }
+
+    });
+
+    searchInput.addEventListener("input", function () {
+
+        if (!searchInput.value.trim()) {
+            searchResults.replaceChildren();
+            searchResults.style.display = "none";
+        }
+
+    });
+
+});
+</script>
 
 </body>
 </html>
